@@ -4,6 +4,7 @@ from player import Hero
 from monstr import Monster
 from vistrel import Bullet
 from coin_rew import Coin
+from pyglet.graphics import Batch
 
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
@@ -11,10 +12,41 @@ SCREEN_TITLE = "Dungeon Grind"
 CAMERA_LERP = 0.12
 
 
-class Level1(arcade.Window):
+class StartView(arcade.View):
     def __init__(self):
-        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
+        super().__init__()
+
+    def on_show_view(self):
         arcade.set_background_color(arcade.color.BLACK)
+
+    def on_draw(self):
+        self.clear()
+        arcade.draw_text(
+            "Dungeon Grind",
+            SCREEN_WIDTH // 2,
+            SCREEN_HEIGHT // 2 + 50,
+            arcade.color.WHITE,
+            54,
+            anchor_x="center"
+        )
+        arcade.draw_text(
+            "Press any key to start",
+            SCREEN_WIDTH // 2,
+            SCREEN_HEIGHT // 2 - 50,
+            arcade.color.WHITE,
+            24,
+            anchor_x="center"
+        )
+
+    def on_key_press(self, key, modifiers):
+        game_view = Level1()
+        game_view.setup()
+        self.window.show_view(game_view)
+
+
+class Level1(arcade.View):
+    def __init__(self):
+        super().__init__()
         self.hero = None
         self.walls = None
         self.doors = None
@@ -29,6 +61,9 @@ class Level1(arcade.Window):
         self.spawn_timer = 0
         self.map_width = 0
         self.map_height = 0
+
+    def on_show_view(self):
+        arcade.set_background_color(arcade.color.BLACK)
 
     def setup(self):
         self.hero = Hero()
@@ -97,7 +132,7 @@ class Level1(arcade.Window):
 
     def on_mouse_press(self, x, y, button, modifiers):
         if button == arcade.MOUSE_BUTTON_RIGHT:
-            world_x, world_y = self._get_mouse_coordinates()
+            world_x, world_y = self._get_mouse_coordinates(x, y)
             bullet = self.hero.shoot(world_x, world_y)
             if bullet:
                 self.bullets.append(bullet)
@@ -105,16 +140,16 @@ class Level1(arcade.Window):
     def on_key_release(self, key, modifiers):
         self.hero.on_key_release(key, modifiers)
 
-    def _get_mouse_coordinates(self):
-        x, y = self._mouse_x, self._mouse_y
+    def _get_mouse_coordinates(self, x, y):
         x += self.world_camera.position[0] - SCREEN_WIDTH // 2
         y += self.world_camera.position[1] - SCREEN_HEIGHT // 2
         return x, y
 
 
 def main():
-    game = Level1()
-    game.setup()
+    window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
+    start_view = StartView()
+    window.show_view(start_view)
     arcade.run()
 
 
