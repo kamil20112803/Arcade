@@ -1,14 +1,33 @@
 import arcade
+import math
+import random
 
 
 class Bullet(arcade.Sprite):
-    def __init__(self, x, y, vel_x, vel_y):
-        super().__init__("images/bullet.png", scale=1.0)
-        self.center_x = x
-        self.center_y = y
-        self.change_x = vel_x
-        self.change_y = vel_y
+    def __init__(self, start_x, start_y, target_x, target_y):
+        super().__init__("images/bullet.png", scale=2.0)
+        self.center_x = start_x
+        self.center_y = start_y
 
-    def update(self):
-        self.center_x += self.change_x
-        self.center_y += self.change_y
+        dx = target_x - start_x
+        dy = target_y - start_y
+        dist = math.hypot(dx, dy)
+
+        if dist > 0:
+            self.change_x = (dx / dist) * 800
+            self.change_y = (dy / dist) * 800
+        else:
+            self.change_x = 0
+            self.change_y = 0
+
+        self.distance_traveled = 0
+        self.max_distance = random.randint(200, 300)
+
+    def update(self, delta_time):
+        old_x, old_y = self.center_x, self.center_y
+        self.center_x += self.change_x * delta_time
+        self.center_y += self.change_y * delta_time
+        step = math.hypot(self.change_x * delta_time, self.change_y * delta_time)
+        self.distance_traveled += step
+        if self.distance_traveled >= self.max_distance:
+            self.remove_from_sprite_lists()

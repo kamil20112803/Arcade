@@ -24,13 +24,13 @@ class Hero(arcade.Sprite):
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.W:
-            self.change_y = 20
+            self.change_y = 10
         elif key == arcade.key.S:
-            self.change_y = -20
+            self.change_y = -10
         elif key == arcade.key.A:
-            self.change_x = -20
+            self.change_x = -10
         elif key == arcade.key.D:
-            self.change_x = 20
+            self.change_x = 1ы0
 
     def on_key_release(self, key, modifiers):
         if key in [arcade.key.W, arcade.key.S]:
@@ -39,13 +39,5 @@ class Hero(arcade.Sprite):
             self.change_x = 0
 
     def shoot(self, target_x, target_y):
-        dx = target_x - self.center_x
-        dy = target_y - self.center_y
-        dist = math.hypot(dx, dy)
-        if dist > 0:
-            return Bullet(
-                self.center_x, self.center_y,
-                (dx / dist) * 120,
-                (dy / dist) * 120
-            )
-        return None
+        from vistrel import Bullet
+        return Bullet(self.center_x, self.center_y, target_x, target_y)

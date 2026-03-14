@@ -86,18 +86,7 @@ class Level1(arcade.Window):
             if arcade.check_for_collision(self.hero, coin):
                 self.hero.coins += 1
                 coin.remove_from_sprite_lists()
-        target_x = self.hero.center_x - SCREEN_WIDTH // 2
-        target_y = self.hero.center_y - SCREEN_HEIGHT // 2
-        min_x = SCREEN_WIDTH // 2
-        max_x = self.map_width - SCREEN_WIDTH
-        min_y = SCREEN_HEIGHT // 2
-        max_y = self.map_height - SCREEN_HEIGHT
-        target_x = max(min_x, min(target_x, max_x))
-        target_y = max(min_y, min(target_y, max_y))
-        current_x, current_y = self.world_camera.position
-        new_x = current_x + (target_x - current_x) * CAMERA_LERP
-        new_y = current_y + (target_y - current_y) * CAMERA_LERP
-        self.world_camera.position = (new_x, new_y)
+        self.world_camera.position = self.hero.center_x, self.hero.center_y
         door_hit = arcade.check_for_collision_with_list(self.hero, self.doors)
         if door_hit and self.hero.coins >= 100:
             print("Переход на уровень 2 (заглушка)")
@@ -115,8 +104,8 @@ class Level1(arcade.Window):
 
     def _get_mouse_coordinates(self):
         x, y = self._mouse_x, self._mouse_y
-        x += self.world_camera.position[0]
-        y += self.world_camera.position[1]
+        x += self.world_camera.position[0] - SCREEN_WIDTH // 2
+        y += self.world_camera.position[1] - SCREEN_HEIGHT // 2
         return x, y
 
 
