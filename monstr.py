@@ -9,7 +9,7 @@ class Monster(arcade.Sprite):
         super().__init__(f"images/{texture}.png", scale=3.0)
         self.center_x = x
         self.center_y = y
-        self.speed = 65
+        self.speed = 100
         self.health = 5
         self.dead = False
         self.walls = walls_list
@@ -21,14 +21,28 @@ class Monster(arcade.Sprite):
         dist = math.hypot(dx, dy)
 
         if dist > 0:
-            new_x = self.center_x + (dx / dist) * self.speed * delta_time
-            new_y = self.center_y + (dy / dist) * self.speed * delta_time
-
-            old_x, old_y = self.center_x, self.center_y
-            self.center_x, self.center_y = new_x, new_y
-
-            if arcade.check_for_collision_with_list(self, self.walls):
-                self.center_x, self.center_y = old_x, old_y
+            if abs(dx) > abs(dy):
+                new_x = self.center_x + (1 if dx > 0 else -1) * self.speed * delta_time
+                old_x = self.center_x
+                self.center_x = new_x
+                if arcade.check_for_collision_with_list(self, self.walls):
+                    self.center_x = old_x
+                    new_y = self.center_y + (1 if dy > 0 else -1) * self.speed * delta_time
+                    old_y = self.center_y
+                    self.center_y = new_y
+                    if arcade.check_for_collision_with_list(self, self.walls):
+                        self.center_y = old_y
+            else:
+                new_y = self.center_y + (1 if dy > 0 else -1) * self.speed * delta_time
+                old_y = self.center_y
+                self.center_y = new_y
+                if arcade.check_for_collision_with_list(self, self.walls):
+                    self.center_y = old_y
+                    new_x = self.center_x + (1 if dx > 0 else -1) * self.speed * delta_time
+                    old_x = self.center_x
+                    self.center_x = new_x
+                    if arcade.check_for_collision_with_list(self, self.walls):
+                        self.center_x = old_x
 
         for bullet in bullet_list:
             if arcade.check_for_collision(self, bullet):

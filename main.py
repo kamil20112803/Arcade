@@ -85,7 +85,7 @@ class Level1(arcade.Window):
         self.coins.update(delta_time)
         for coin in self.coins:
             if arcade.check_for_collision(self.hero, coin):
-                self.hero.coins += 1
+                self.hero.coins += 10
                 coin.remove_from_sprite_lists()
         self.world_camera.position = self.hero.center_x, self.hero.center_y
         door_hit = arcade.check_for_collision_with_list(self.hero, self.doors)
