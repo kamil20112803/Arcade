@@ -15,8 +15,8 @@ class Hero(arcade.Sprite):
         self.health_regen_timer = 0
 
     def update(self, delta_time):
-        self.center_x += self.change_x
-        self.center_y += self.change_y
+        self.center_x += self.change_x * delta_time
+        self.center_y += self.change_y * delta_time
         self.health_regen_timer += delta_time
         if self.health_regen_timer >= 5.0 and self.health < 20:
             self.health = min(20, self.health + 1)
@@ -24,13 +24,13 @@ class Hero(arcade.Sprite):
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.W:
-            self.change_y = 60
+            self.change_y = 20
         elif key == arcade.key.S:
-            self.change_y = -60
+            self.change_y = -20
         elif key == arcade.key.A:
-            self.change_x = -60
+            self.change_x = -20
         elif key == arcade.key.D:
-            self.change_x = 60
+            self.change_x = 20
 
     def on_key_release(self, key, modifiers):
         if key in [arcade.key.W, arcade.key.S]:
