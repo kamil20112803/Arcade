@@ -93,9 +93,11 @@ class Level1(arcade.Window):
 
     def on_key_press(self, key, modifiers):
         self.hero.on_key_press(key, modifiers)
-        if key == arcade.key.B:
-            x, y = self._get_mouse_coordinates()
-            bullet = self.hero.shoot(x, y)
+
+    def on_mouse_press(self, x, y, button, modifiers):
+        if button == arcade.MOUSE_BUTTON_RIGHT:
+            world_x, world_y = self._get_mouse_coordinates()
+            bullet = self.hero.shoot(world_x, world_y)
             if bullet:
                 self.bullets.append(bullet)
 

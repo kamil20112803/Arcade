@@ -30,7 +30,7 @@ class Hero(arcade.Sprite):
         elif key == arcade.key.A:
             self.change_x = -10
         elif key == arcade.key.D:
-            self.change_x = 1ы0
+            self.change_x = 10
 
     def on_key_release(self, key, modifiers):
         if key in [arcade.key.W, arcade.key.S]:
