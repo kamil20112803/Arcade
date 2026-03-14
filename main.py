@@ -50,7 +50,7 @@ class Level1(arcade.Window):
         if len(self.roads) == 0:
             return
         road = random.choice(self.roads)
-        monster = Monster(road.center_x, road.center_y)
+        monster = Monster(road.center_x, road.center_y, self.walls)
         self.monsters.append(monster)
 
     def on_draw(self):
@@ -80,6 +80,7 @@ class Level1(arcade.Window):
             if monster.dead:
                 coin = Coin(monster.center_x, monster.center_y)
                 self.coins.append(coin)
+            monster.try_hit_player(self.hero)
         self.bullets.update()
         self.coins.update(delta_time)
         for coin in self.coins:

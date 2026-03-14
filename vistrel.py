@@ -17,7 +17,6 @@ class Bullet(arcade.Sprite):
             self.change_x = (dx / dist) * 800
             self.change_y = (dy / dist) * 800
             self.angle = 270 - math.degrees(math.atan2(dy, dx))
-            print(self.angle)
         else:
             self.change_x = 0
             self.change_y = 0
