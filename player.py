@@ -39,7 +39,6 @@ class Hero(arcade.Sprite):
             self.change_x = 0
 
     def shoot(self, target_x, target_y):
-        from bullet import Bullet
         dx = target_x - self.center_x
         dy = target_y - self.center_y
         dist = math.hypot(dx, dy)
