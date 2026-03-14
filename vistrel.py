@@ -16,15 +16,17 @@ class Bullet(arcade.Sprite):
         if dist > 0:
             self.change_x = (dx / dist) * 800
             self.change_y = (dy / dist) * 800
+            self.angle = 270 - math.degrees(math.atan2(dy, dx))
+            print(self.angle)
         else:
             self.change_x = 0
             self.change_y = 0
+            self.angle = 0
 
         self.distance_traveled = 0
-        self.max_distance = random.randint(200, 300)
+        self.max_distance = random.randint(400, 500)
 
     def update(self, delta_time):
-        old_x, old_y = self.center_x, self.center_y
         self.center_x += self.change_x * delta_time
         self.center_y += self.change_y * delta_time
         step = math.hypot(self.change_x * delta_time, self.change_y * delta_time)
