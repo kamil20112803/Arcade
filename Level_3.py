@@ -1,6 +1,7 @@
 import arcade
 import random
 import math
+import time
 from player import Hero
 from monstr import Monster
 from vistrel import Bullet
@@ -48,6 +49,9 @@ class Level3(arcade.View):
         self.spawn_timer = 0
         self.map_width = 0
         self.map_height = 0
+        self.ultra_shots = 3
+        self.last_ultra_time = 0
+        self.ultra_cooldown = 30
 
     def on_show_view(self):
         arcade.set_background_color(arcade.color.BLACK)
@@ -65,6 +69,10 @@ class Level3(arcade.View):
         self.doors = tile_map.sprite_lists["дверь"]
         self.map_width = tile_map.width * tile_map.tile_width * 3
         self.map_height = tile_map.height * tile_map.tile_height * 3
+        self.hero.center_x = (tile_map.width // 2) * tile_map.tile_width * 3 + (tile_map.tile_width * 3 // 2)
+        self.hero.center_y = (tile_map.height // 2) * tile_map.tile_height * 3 + (tile_map.tile_height * 3 // 2)
+        self.ultra_shots = 3
+        self.last_ultra_time = time.time()
 
     def spawn_monster(self):
         if len(self.ground) == 0:
@@ -102,6 +110,10 @@ class Level3(arcade.View):
         self.gui_camera.use()
         arcade.draw_text(f"Coins: {self.hero.coins}", 10, SCREEN_HEIGHT - 30, arcade.color.WHITE, 20)
         arcade.draw_text(f"Health: {self.hero.health}", 10, SCREEN_HEIGHT - 60, arcade.color.WHITE, 20)
+        arcade.draw_text(f"Ultra shots: {self.ultra_shots}", 10, SCREEN_HEIGHT - 90, arcade.color.GOLD, 20)
+        current_time = time.time()
+        if self.ultra_shots < 3 and current_time - self.last_ultra_time >= self.ultra_cooldown:
+            arcade.draw_text("ULTRA READY!", SCREEN_WIDTH // 2, 50, arcade.color.GREEN, 24, anchor_x="center")
 
     def on_update(self, delta_time):
         self.hero.update(delta_time)
@@ -127,6 +139,10 @@ class Level3(arcade.View):
                 self.hero.coins += 10
                 coin.remove_from_sprite_lists()
         self.world_camera.position = self.hero.center_x, self.hero.center_y
+        current_time = time.time()
+        if self.ultra_shots < 3 and current_time - self.last_ultra_time >= self.ultra_cooldown:
+            self.ultra_shots += 1
+            self.last_ultra_time = current_time
         door_hit = arcade.check_for_collision_with_list(self.hero, self.doors)
         if door_hit:
             from victory import VictoryView
@@ -136,14 +152,14 @@ class Level3(arcade.View):
         self.hero.on_key_press(key, modifiers)
 
     def on_mouse_press(self, x, y, button, modifiers):
-        if button == arcade.MOUSE_BUTTON_RIGHT:
+        if button == arcade.MOUSE_BUTTON_LEFT and self.ultra_shots > 0:
+            self.spawn_ultra_shot(self.hero.center_x, self.hero.center_y)
+            self.ultra_shots -= 1
+        elif button == arcade.MOUSE_BUTTON_RIGHT:
             world_x, world_y = self._get_mouse_coordinates(x, y)
-            if random.random() < 0.04:
-                self.spawn_ultra_shot(self.hero.center_x, self.hero.center_y)
-            else:
-                bullet = self.hero.shoot(world_x, world_y)
-                if bullet:
-                    self.bullets.append(bullet)
+            bullet = self.hero.shoot(world_x, world_y)
+            if bullet:
+                self.bullets.append(bullet)
 
     def on_key_release(self, key, modifiers):
         self.hero.on_key_release(key, modifiers)

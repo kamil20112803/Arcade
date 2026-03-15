@@ -102,7 +102,7 @@ class Level2(arcade.View):
                 coin.remove_from_sprite_lists()
         self.world_camera.position = self.hero.center_x, self.hero.center_y
         door_hit = arcade.check_for_collision_with_list(self.hero, self.doors)
-        if door_hit and self.hero.coins >= 500:
+        if door_hit and self.hero.coins >= 400:
             level3 = Level3()
             level3.setup(self.hero)
             self.window.show_view(level3)

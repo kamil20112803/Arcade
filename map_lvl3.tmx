@@ -3,12 +3,12 @@
  <tileset firstgid="1" source="Tiled/sampleSheet.tsx"/>
  <layer id="1" name="пол" width="20" height="20">
   <data encoding="base64" compression="zlib">
-   eJwzZGBgMBzFo3gUj+JRPIpJxADvYUyR
+   eJwzZGBgMBwAzDBA9o7iUTyKR/Eopg4GANQKTGA=
   </data>
  </layer>
  <layer id="2" name="стены" width="20" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYKQyZgJiZgoxC5J5fAyUA4FR80bNGzVv1LwhaJ4UEEtTiGWQzKMmBgDwAARJ
+   eJxjZGBgYKQyZgJiZgKYgYA8C5J5fAyUA4FR80bNGzVv1LwhaJ4UEEtTiGWQzKMmBgDeqARG
   </data>
  </layer>
  <layer id="3" name="дверь" width="20" height="20">
