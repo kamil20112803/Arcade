@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="1">
+ <tileset firstgid="1" source="Карта_2/Tiled/sampleSheet.tsx"/>
+ <layer id="1" name="земля" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJztl2uOHCEMhGfmLjlpLp6fGSEwflTZpodI1ka73dj+qjD0+/V6vRXxKQpPTZp+dmsxevbUtarDuxYyojV18FBGn534V+9BhGc6sJZ6zvAn2+vdvN1lJrC4d+e7ei/CqFLHrpxvcAOhZYXO1T7uFp/h/5djrRYj4yzuv6yx5PHq+WrVA6Fb1t7XrN/Fh5HeLe9ZeaM00eSr0IJ1/0DrxtCEycCbl5mLyZOpJUufqrNHmsWr33n6t55r2jW1PLt43+Jfr3aofWLVzOv3SN4MLVj8tRytORDzM1sDxMxi+Ccy604OS++f4SfDl1kzD1Vfhe9mPaJnvMYHHfSI6oPSczXPtfkRmnXTQsObtZ+ivc/mY9QPv6pHVLOxTpY3KrSIzivWjFg9P8sXZYbYr1HuY1+W+5N3/Qgr1Jyzao9kbeHO8MAsX+R97bMsPbyeZc7/aK/WHjzaRLRHeKkLd63vtD1IPWlnaNQ71fyi7CPnkNb3nlnB9NIpETn/mV6wzL1qhhlajPzew08GW69u1RzZemj6XzFBstOuW80RpYWnx8je8M6jXT3VLFHsI5wzvSHlP0EPzXyJcs7icNL5EfVT1GdVLKJ6MGZu1NeIPd/Bm0xWltzRNVBMqzXJzI/WdabF1SOPP1uLDpqw5g9b5/EnW+8TNKm4p2VogWCTkbP6nvydN7OO7F5X+ar5z7hn7YuVDzL16MZ/55PsurL7r+DvqaFij2Tnq/Ab+juk01mC+M7N4o/8ntbmydKk63eQhUvmNykjF/Obt6LnylnpqTXz3qPxMqOeLveJsY7qO+c427PqqdRD0qdDDU++32t6r9RmVUMVF2QfHv6W97K/fTprMmMzfidKzyDr7XK2Z+bdMe4w87/rfKImXZl76z9JjxOZR/vz9ojUVjP3q9kxNdg9g9TEM2OetB+092bJj5pnGefo6Rqw2Hg4Ivqo5sliX1mfp59qth7+2r9Vx66ejjVbPZPFH7W+VH81YyuH3QxCzygWq1M10PCVeovMbQarlX+qee/Yr9js9oanzw6zrvqeYZ03Gl4WrpkaWH2RyV/L3VqXVYeMniPvM32BYu71X8e9wNRE43VUrTOtT9Tgj1OTCGeGDqt60bpba2HpLPVl1YCpQyZ/dni4Sj2zZ9Lu953CMrs9d5DVOxkadN4HrPNR671Z3mj+2XqSLl2YM2rxngXRmqzroXuPzBFkLX+/InIW7+YYUlNU/xEPsfbGqIc1z+4c0WjqOb/QPt/5P+vM+v7n8YfXf9a+JH4eRrv9GfVOlh67ejT+s3gQ6c0IY03fLI0svkKFlh1CB4u+0t8z5hfKa9FZz/SQhXVXHTQztdoj1n4iOnTlf5IGGi0sHLLYP42/lrmGRTb7p/GXtFixYPZt8f3T+I99rnqXnmPx/wXuEhOJEZKHtN9+kb2kBZvJin81gw6RMYt2OW/853IZ9Yg7K3rF1eByu3Hjxo0bN248J/4Bn90ydA==
+  </data>
+ </layer>
+ <layer id="3" name="дверь" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJztzjEBAAAMAiD7t1nDFfD3gQQkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAsHHrAABA8ZX+ALI=
+  </data>
+ </layer>
+ <layer id="2" name="вода" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJztnVFOhDAYBvvgDdQjuB5BPYLxCEZv5X11Y4grbKE/FBhgJvle2KbwMw9Aod1TSulkjDHGVMjzRZptH63t1/IZaDs2Q8e7pTTnqy+P6T8Pme3XiLQdS7OP3PFuiXYt+lgXfbDQBwt9sNAHi7V93P7kLpD7ghr0Mdx/rm3J/ofOtT7q+yh9XnwpqEEfeZ5S/jxG+8qhj3p16+M/+mChDxb6YKEPFvpgoQ8WtX1Exz/eevoaW4M+Yv2V7GNKDfr4o3kej74v1scvXj9Y6IOFPljog4U+WOiDhT5Y6IOFPlhM8fGaYmNVfeNXpX35vU/exxrxe59ufdExqprxex9+ffpgoQ8W+mBxNB/nTL2vrRXvd1nxfjc2r/lU0HZMe33E6ouOe9Rsr498P/qYhj5Y6IOFPljog4U+WOiDhT5Y6IOFPljog4U+WOiDhT5Y1PIxtG7MnO31wUIfLPTBQh8s9MFCHyz0wUIfLPTRJbquT800c6z0EetnqeijO2dqif/Fyf2njD7y/S5xbrx+lPerjxj6YKEPFvpgsUcffWs9XJvvRmKPz+d7r4Vcw03qPp9vtZYzc/n4ukhN2uMy76ncxZF9zHX9mDouo4+66EMfS6IPFvpgoQ8W+mAxt48aa172vZvVR71+18hRfcy15mX73aw+1sXrB6sGfbBq0AerBn2wahi6T0gDv5fOj1uLrfnYO/pgoQ8WpdfHtddBPkqmjgeZ+fMNhd/QgA==
+  </data>
+ </layer>
+</map>

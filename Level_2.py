@@ -4,54 +4,19 @@ from player import Hero
 from monstr import Monster
 from vistrel import Bullet
 from coin_rew import Coin
-from pyglet.graphics import Batch
-from Level_2 import Level2
 
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
-SCREEN_TITLE = "Dungeon Grind"
 CAMERA_LERP = 0.12
 
 
-class StartView(arcade.View):
-    def __init__(self):
-        super().__init__()
-
-    def on_show_view(self):
-        arcade.set_background_color(arcade.color.BLACK)
-
-    def on_draw(self):
-        self.clear()
-        arcade.draw_text(
-            "Dungeon Grind",
-            SCREEN_WIDTH // 2,
-            SCREEN_HEIGHT // 2 + 50,
-            arcade.color.WHITE,
-            54,
-            anchor_x="center"
-        )
-        arcade.draw_text(
-            "Press any key to start",
-            SCREEN_WIDTH // 2,
-            SCREEN_HEIGHT // 2 - 50,
-            arcade.color.WHITE,
-            24,
-            anchor_x="center"
-        )
-
-    def on_key_press(self, key, modifiers):
-        game_view = Level1()
-        game_view.setup()
-        self.window.show_view(game_view)
-
-
-class Level1(arcade.View):
+class Level2(arcade.View):
     def __init__(self):
         super().__init__()
         self.hero = None
-        self.walls = None
+        self.ground = None
+        self.water = None
         self.doors = None
-        self.roads = None
         self.monsters = None
         self.bullets = None
         self.coins = None
@@ -62,38 +27,47 @@ class Level1(arcade.View):
         self.spawn_timer = 0
         self.map_width = 0
         self.map_height = 0
+        self.required_coins = 200
 
     def on_show_view(self):
         arcade.set_background_color(arcade.color.BLACK)
 
-    def setup(self):
-        self.hero = Hero()
-        self.hero.center_x = 49 * 48
-        self.hero.center_y = 4 * 48
+    def setup(self, previous_hero):
+        self.hero = previous_hero
         self.all_sprites = arcade.SpriteList()
         self.all_sprites.append(self.hero)
         self.monsters = arcade.SpriteList()
         self.bullets = arcade.SpriteList()
         self.coins = arcade.SpriteList()
-        tile_map = arcade.load_tilemap("map_lvl1.tmx", scaling=3.0)
-        self.walls = tile_map.sprite_lists["стены"]
+        tile_map = arcade.load_tilemap("map_lvl2.tmx", scaling=3.0)
+        self.ground = tile_map.sprite_lists["земля"]
+        self.water = tile_map.sprite_lists["вода"]
         self.doors = tile_map.sprite_lists["дверь"]
-        self.roads = tile_map.sprite_lists["дорога"]
         self.map_width = tile_map.width * tile_map.tile_width * 3
         self.map_height = tile_map.height * tile_map.tile_height * 3
 
     def spawn_monster(self):
-        if len(self.roads) == 0:
+        if len(self.ground) == 0:
             return
-        road = random.choice(self.roads)
-        monster = Monster(road.center_x, road.center_y, self.walls)
-        self.monsters.append(monster)
+        attempts = 0
+        while attempts < 50:
+            ground = random.choice(self.ground)
+            water_collision = False
+            for water_tile in self.water:
+                if abs(ground.center_x - water_tile.center_x) < 10 and abs(ground.center_y - water_tile.center_y) < 10:
+                    water_collision = True
+                    break
+            if not water_collision:
+                monster = Monster(ground.center_x, ground.center_y, self.water)
+                self.monsters.append(monster)
+                return
+            attempts += 1
 
     def on_draw(self):
         self.clear()
         self.world_camera.use()
-        self.roads.draw()
-        self.walls.draw()
+        self.ground.draw()
+        self.water.draw()
         self.doors.draw()
         self.all_sprites.draw()
         self.monsters.draw()
@@ -105,10 +79,10 @@ class Level1(arcade.View):
 
     def on_update(self, delta_time):
         self.hero.update(delta_time)
-        self.physics_engine = arcade.PhysicsEngineSimple(self.hero, self.walls)
+        self.physics_engine = arcade.PhysicsEngineSimple(self.hero, self.water)
         self.physics_engine.update()
         self.spawn_timer += delta_time
-        if self.spawn_timer >= 5.0:
+        if self.spawn_timer >= 8.0:
             self.spawn_monster()
             self.spawn_timer = 0
         for monster in self.monsters:
@@ -117,6 +91,9 @@ class Level1(arcade.View):
                 coin = Coin(monster.center_x, monster.center_y)
                 self.coins.append(coin)
             monster.try_hit_player(self.hero)
+            if self.hero.health <= 0:
+                from gameover import GameOverView
+                self.window.show_view(GameOverView())
         self.bullets.update()
         self.coins.update(delta_time)
         for coin in self.coins:
@@ -125,10 +102,9 @@ class Level1(arcade.View):
                 coin.remove_from_sprite_lists()
         self.world_camera.position = self.hero.center_x, self.hero.center_y
         door_hit = arcade.check_for_collision_with_list(self.hero, self.doors)
-        if door_hit and self.hero.coins >= 0:
-            level2 = Level2()
-            level2.setup(self.hero)
-            self.window.show_view(level2)
+        if door_hit and self.hero.coins >= self.required_coins:
+            from victory import VictoryView
+            self.window.show_view(VictoryView())
 
     def on_key_press(self, key, modifiers):
         self.hero.on_key_press(key, modifiers)
@@ -147,14 +123,3 @@ class Level1(arcade.View):
         x += self.world_camera.position[0] - SCREEN_WIDTH // 2
         y += self.world_camera.position[1] - SCREEN_HEIGHT // 2
         return x, y
-
-
-def main():
-    window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
-    start_view = StartView()
-    window.show_view(start_view)
-    arcade.run()
-
-
-if __name__ == "__main__":
-    main()
