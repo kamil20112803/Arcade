@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="1">
+ <tileset firstgid="1" source="Tiled/sampleSheet.tsx"/>
+ <layer id="1" name="пол" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJwzZGBgMBzFo3gUj+JRPIpJxADvYUyR
+  </data>
+ </layer>
+ <layer id="2" name="стены" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjZGBgYKQyZgJiZgoxC5J5fAyUA4FR80bNGzVv1LwhaJ4UEEtTiGWQzKMmBgDwAARJ
+  </data>
+ </layer>
+ <layer id="3" name="дверь" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgYoDRA9o6CUTAKRsEooA4AAMrQACM=
+  </data>
+ </layer>
+</map>

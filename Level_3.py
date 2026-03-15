@@ -1,22 +1,42 @@
 import arcade
 import random
+import math
 from player import Hero
 from monstr import Monster
 from vistrel import Bullet
 from coin_rew import Coin
-from Level_3 import Level3
 
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 CAMERA_LERP = 0.12
 
 
-class Level2(arcade.View):
+class UltraBullet(arcade.Sprite):
+    def __init__(self, start_x, start_y, angle_deg):
+        super().__init__("images/bullet.png", scale=2.0)
+        self.center_x = start_x
+        self.center_y = start_y
+        angle_rad = math.radians(angle_deg)
+        self.change_x = math.cos(angle_rad) * 800
+        self.change_y = math.sin(angle_rad) * 800
+        self.angle = angle_deg
+        self.distance_traveled = 0
+        self.max_distance = 300
+
+    def update(self, delta_time):
+        self.center_x += self.change_x * delta_time
+        self.center_y += self.change_y * delta_time
+        self.distance_traveled += math.hypot(self.change_x * delta_time, self.change_y * delta_time)
+        if self.distance_traveled >= self.max_distance:
+            self.remove_from_sprite_lists()
+
+
+class Level3(arcade.View):
     def __init__(self):
         super().__init__()
         self.hero = None
         self.ground = None
-        self.water = None
+        self.walls = None
         self.doors = None
         self.monsters = None
         self.bullets = None
@@ -39,9 +59,9 @@ class Level2(arcade.View):
         self.monsters = arcade.SpriteList()
         self.bullets = arcade.SpriteList()
         self.coins = arcade.SpriteList()
-        tile_map = arcade.load_tilemap("map_lvl2.tmx", scaling=3.0)
-        self.ground = tile_map.sprite_lists["земля"]
-        self.water = tile_map.sprite_lists["вода"]
+        tile_map = arcade.load_tilemap("map_lvl3.tmx", scaling=3.0)
+        self.ground = tile_map.sprite_lists["пол"]
+        self.walls = tile_map.sprite_lists["стены"]
         self.doors = tile_map.sprite_lists["дверь"]
         self.map_width = tile_map.width * tile_map.tile_width * 3
         self.map_height = tile_map.height * tile_map.tile_height * 3
@@ -52,22 +72,28 @@ class Level2(arcade.View):
         attempts = 0
         while attempts < 50:
             ground = random.choice(self.ground)
-            water_collision = False
-            for water_tile in self.water:
-                if abs(ground.center_x - water_tile.center_x) < 10 and abs(ground.center_y - water_tile.center_y) < 10:
-                    water_collision = True
+            wall_collision = False
+            for wall in self.walls:
+                if abs(ground.center_x - wall.center_x) < 10 and abs(ground.center_y - wall.center_y) < 10:
+                    wall_collision = True
                     break
-            if not water_collision:
-                monster = Monster(ground.center_x, ground.center_y, self.water)
+            if not wall_collision:
+                monster = Monster(ground.center_x, ground.center_y, self.walls)
                 self.monsters.append(monster)
                 return
             attempts += 1
+
+    def spawn_ultra_shot(self, x, y):
+        for i in range(9):
+            angle = i * 45
+            bullet = UltraBullet(x, y, angle)
+            self.bullets.append(bullet)
 
     def on_draw(self):
         self.clear()
         self.world_camera.use()
         self.ground.draw()
-        self.water.draw()
+        self.walls.draw()
         self.doors.draw()
         self.all_sprites.draw()
         self.monsters.draw()
@@ -79,10 +105,10 @@ class Level2(arcade.View):
 
     def on_update(self, delta_time):
         self.hero.update(delta_time)
-        self.physics_engine = arcade.PhysicsEngineSimple(self.hero, self.water)
+        self.physics_engine = arcade.PhysicsEngineSimple(self.hero, self.walls)
         self.physics_engine.update()
         self.spawn_timer += delta_time
-        if self.spawn_timer >= 4.0:
+        if self.spawn_timer >= 3.0:
             self.spawn_monster()
             self.spawn_timer = 0
         for monster in self.monsters:
@@ -102,10 +128,9 @@ class Level2(arcade.View):
                 coin.remove_from_sprite_lists()
         self.world_camera.position = self.hero.center_x, self.hero.center_y
         door_hit = arcade.check_for_collision_with_list(self.hero, self.doors)
-        if door_hit and self.hero.coins >= 500:
-            level3 = Level3()
-            level3.setup(self.hero)
-            self.window.show_view(level3)
+        if door_hit:
+            from victory import VictoryView
+            self.window.show_view(VictoryView(self.hero.coins))
 
     def on_key_press(self, key, modifiers):
         self.hero.on_key_press(key, modifiers)
@@ -113,9 +138,12 @@ class Level2(arcade.View):
     def on_mouse_press(self, x, y, button, modifiers):
         if button == arcade.MOUSE_BUTTON_RIGHT:
             world_x, world_y = self._get_mouse_coordinates(x, y)
-            bullet = self.hero.shoot(world_x, world_y)
-            if bullet:
-                self.bullets.append(bullet)
+            if random.random() < 0.04:
+                self.spawn_ultra_shot(self.hero.center_x, self.hero.center_y)
+            else:
+                bullet = self.hero.shoot(world_x, world_y)
+                if bullet:
+                    self.bullets.append(bullet)
 
     def on_key_release(self, key, modifiers):
         self.hero.on_key_release(key, modifiers)
