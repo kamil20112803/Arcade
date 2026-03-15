@@ -1,5 +1,4 @@
 import arcade
-from pyglet.graphics import Batch
 
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
@@ -8,7 +7,6 @@ SCREEN_HEIGHT = 720
 class GameOverView(arcade.View):
     def __init__(self, coins):
         super().__init__()
-        self.batch = Batch()
         self.coins = coins
         self.highscore = 0
         self.load_highscore()
@@ -29,43 +27,38 @@ class GameOverView(arcade.View):
 
     def on_draw(self):
         self.clear()
-        arcade.Text(
+        arcade.draw_text(
             "GAME OVER",
             SCREEN_WIDTH // 2,
             SCREEN_HEIGHT // 2 + 100,
             arcade.color.RED,
             72,
-            anchor_x="center",
-            batch=self.batch
+            anchor_x="center"
         )
-        arcade.Text(
+        arcade.draw_text(
             f"Your score: {self.coins}",
             SCREEN_WIDTH // 2,
             SCREEN_HEIGHT // 2 + 20,
             arcade.color.WHITE,
             24,
-            anchor_x="center",
-            batch=self.batch
+            anchor_x="center"
         )
-        arcade.Text(
+        arcade.draw_text(
             f"Highscore: {self.highscore}",
             SCREEN_WIDTH // 2,
             SCREEN_HEIGHT // 2 - 20,
             arcade.color.GOLD,
             24,
-            anchor_x="center",
-            batch=self.batch
+            anchor_x="center"
         )
-        arcade.Text(
+        arcade.draw_text(
             "Press any key to restart",
             SCREEN_WIDTH // 2,
             SCREEN_HEIGHT // 2 - 70,
             arcade.color.WHITE,
             20,
-            anchor_x="center",
-            batch=self.batch
+            anchor_x="center"
         )
-        self.batch.draw()
 
     def on_key_press(self, key, modifiers):
         from main import StartView
