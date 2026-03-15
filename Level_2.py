@@ -1,5 +1,6 @@
 import arcade
 import random
+from pyglet.graphics import Batch
 from player import Hero
 from monstr import Monster
 from vistrel import Bullet
@@ -30,6 +31,9 @@ class Level2(arcade.View):
         self.map_height = 0
         self.transition_timer = 0
         self.transition_active = False
+        self.batch = Batch()
+        self.coins_text = None
+        self.health_text = None
 
     def on_show_view(self):
         arcade.set_background_color(arcade.color.BLACK)
@@ -47,6 +51,11 @@ class Level2(arcade.View):
         self.doors = tile_map.sprite_lists["дверь"]
         self.map_width = tile_map.width * tile_map.tile_width * 3
         self.map_height = tile_map.height * tile_map.tile_height * 3
+
+        self.coins_text = arcade.Text(f"Coins: {self.hero.coins}", 10, SCREEN_HEIGHT - 30, arcade.color.WHITE, 20,
+                                      batch=self.batch)
+        self.health_text = arcade.Text(f"Health: {self.hero.health}", 10, SCREEN_HEIGHT - 60, arcade.color.WHITE, 20,
+                                       batch=self.batch)
 
     def spawn_monster(self):
         if len(self.ground) == 0:
@@ -76,8 +85,10 @@ class Level2(arcade.View):
         self.bullets.draw()
         self.coins.draw()
         self.gui_camera.use()
-        arcade.draw_text(f"Coins: {self.hero.coins}", 10, SCREEN_HEIGHT - 30, arcade.color.WHITE, 20)
-        arcade.draw_text(f"Health: {self.hero.health}", 10, SCREEN_HEIGHT - 60, arcade.color.WHITE, 20)
+
+        self.coins_text.text = f"Coins: {self.hero.coins}"
+        self.health_text.text = f"Health: {self.hero.health}"
+        self.batch.draw()
 
     def on_update(self, delta_time):
         self.hero.update(delta_time)

@@ -1,10 +1,10 @@
 import arcade
 import random
+from pyglet.graphics import Batch
 from player import Hero
 from monstr import Monster
 from vistrel import Bullet
 from coin_rew import Coin
-from pyglet.graphics import Batch
 from Level_2 import Level2
 
 SCREEN_WIDTH = 1280
@@ -16,28 +16,38 @@ CAMERA_LERP = 0.12
 class StartView(arcade.View):
     def __init__(self):
         super().__init__()
+        self.batch = Batch()
+        self.title_text = None
+        self.subtitle_text = None
 
     def on_show_view(self):
         arcade.set_background_color(arcade.color.BLACK)
 
-    def on_draw(self):
-        self.clear()
-        arcade.draw_text(
+    def setup_text(self):
+        self.title_text = arcade.Text(
             "Dungeon Grind",
             SCREEN_WIDTH // 2,
             SCREEN_HEIGHT // 2 + 50,
             arcade.color.WHITE,
             54,
-            anchor_x="center"
+            anchor_x="center",
+            batch=self.batch
         )
-        arcade.draw_text(
+        self.subtitle_text = arcade.Text(
             "Press any key to start",
             SCREEN_WIDTH // 2,
             SCREEN_HEIGHT // 2 - 50,
             arcade.color.WHITE,
             24,
-            anchor_x="center"
+            anchor_x="center",
+            batch=self.batch
         )
+
+    def on_draw(self):
+        self.clear()
+        if self.title_text is None:
+            self.setup_text()
+        self.batch.draw()
 
     def on_key_press(self, key, modifiers):
         game_view = Level1()
@@ -64,6 +74,9 @@ class Level1(arcade.View):
         self.map_height = 0
         self.transition_timer = 0
         self.transition_active = False
+        self.batch = Batch()
+        self.coins_text = None
+        self.health_text = None
 
     def on_show_view(self):
         arcade.set_background_color(arcade.color.BLACK)
@@ -84,6 +97,11 @@ class Level1(arcade.View):
         self.map_width = tile_map.width * tile_map.tile_width * 3
         self.map_height = tile_map.height * tile_map.tile_height * 3
 
+        self.coins_text = arcade.Text(f"Coins: {self.hero.coins}", 10, SCREEN_HEIGHT - 30, arcade.color.WHITE, 20,
+                                      batch=self.batch)
+        self.health_text = arcade.Text(f"Health: {self.hero.health}", 10, SCREEN_HEIGHT - 60, arcade.color.WHITE, 20,
+                                       batch=self.batch)
+
     def spawn_monster(self):
         if len(self.roads) == 0:
             return
@@ -102,8 +120,10 @@ class Level1(arcade.View):
         self.bullets.draw()
         self.coins.draw()
         self.gui_camera.use()
-        arcade.draw_text(f"Coins: {self.hero.coins}", 10, SCREEN_HEIGHT - 30, arcade.color.WHITE, 20)
-        arcade.draw_text(f"Health: {self.hero.health}", 10, SCREEN_HEIGHT - 60, arcade.color.WHITE, 20)
+
+        self.coins_text.text = f"Coins: {self.hero.coins}"
+        self.health_text.text = f"Health: {self.hero.health}"
+        self.batch.draw()
 
     def on_update(self, delta_time):
         self.hero.update(delta_time)

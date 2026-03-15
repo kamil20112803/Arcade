@@ -2,6 +2,7 @@ import arcade
 import random
 import math
 import time
+from pyglet.graphics import Batch
 from player import Hero
 from monstr import Monster
 from vistrel import Bullet
@@ -52,6 +53,11 @@ class Level3(arcade.View):
         self.ultra_shots = 3
         self.last_ultra_time = 0
         self.ultra_cooldown = 30
+        self.batch = Batch()
+        self.coins_text = None
+        self.health_text = None
+        self.ultra_text = None
+        self.ultra_ready_text = None
 
     def on_show_view(self):
         arcade.set_background_color(arcade.color.BLACK)
@@ -73,6 +79,16 @@ class Level3(arcade.View):
         self.hero.center_y = (tile_map.height // 2) * tile_map.tile_height * 3 + (tile_map.tile_height * 3 // 2)
         self.ultra_shots = 3
         self.last_ultra_time = time.time()
+
+        self.coins_text = arcade.Text(f"Coins: {self.hero.coins}", 10, SCREEN_HEIGHT - 30, arcade.color.WHITE, 20,
+                                      batch=self.batch)
+        self.health_text = arcade.Text(f"Health: {self.hero.health}", 10, SCREEN_HEIGHT - 60, arcade.color.WHITE, 20,
+                                       batch=self.batch)
+        self.ultra_text = arcade.Text(f"Ultra shots: {self.ultra_shots}", 10, SCREEN_HEIGHT - 90, arcade.color.GOLD, 20,
+                                      batch=self.batch)
+        self.ultra_ready_text = arcade.Text("ULTRA READY!", SCREEN_WIDTH // 2, 50, arcade.color.GREEN, 24,
+                                            anchor_x="center", batch=self.batch)
+        self.ultra_ready_text.visible = False
 
     def spawn_monster(self):
         if len(self.ground) == 0:
@@ -108,12 +124,16 @@ class Level3(arcade.View):
         self.bullets.draw()
         self.coins.draw()
         self.gui_camera.use()
-        arcade.draw_text(f"Coins: {self.hero.coins}", 10, SCREEN_HEIGHT - 30, arcade.color.WHITE, 20)
-        arcade.draw_text(f"Health: {self.hero.health}", 10, SCREEN_HEIGHT - 60, arcade.color.WHITE, 20)
-        arcade.draw_text(f"Ultra shots: {self.ultra_shots}", 10, SCREEN_HEIGHT - 90, arcade.color.GOLD, 20)
+
+        self.coins_text.text = f"Coins: {self.hero.coins}"
+        self.health_text.text = f"Health: {self.hero.health}"
+        self.ultra_text.text = f"Ultra shots: {self.ultra_shots}"
+
         current_time = time.time()
-        if self.ultra_shots < 3 and current_time - self.last_ultra_time >= self.ultra_cooldown:
-            arcade.draw_text("ULTRA READY!", SCREEN_WIDTH // 2, 50, arcade.color.GREEN, 24, anchor_x="center")
+        self.ultra_ready_text.visible = (self.ultra_shots < 3 and
+                                         current_time - self.last_ultra_time >= self.ultra_cooldown)
+
+        self.batch.draw()
 
     def on_update(self, delta_time):
         self.hero.update(delta_time)
