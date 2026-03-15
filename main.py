@@ -5,6 +5,7 @@ from monstr import Monster
 from vistrel import Bullet
 from coin_rew import Coin
 from pyglet.graphics import Batch
+from Level_2 import Level2
 
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
@@ -124,8 +125,11 @@ class Level1(arcade.View):
                 coin.remove_from_sprite_lists()
         self.world_camera.position = self.hero.center_x, self.hero.center_y
         door_hit = arcade.check_for_collision_with_list(self.hero, self.doors)
-        if door_hit and self.hero.coins >= 100:
-            print("Переход на уровень 2 (заглушка)")
+        if door_hit and self.hero.coins >= 200:
+            if door_hit and self.hero.coins >= 100:
+                level2 = Level2()
+                level2.setup(self.hero)
+                self.window.show_view(level2)
 
     def on_key_press(self, key, modifiers):
         self.hero.on_key_press(key, modifiers)
