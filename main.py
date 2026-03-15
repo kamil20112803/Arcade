@@ -130,7 +130,7 @@ class Level1(arcade.View):
             from gameover import GameOverView
             self.window.show_view(GameOverView(self.hero.coins))
         door_hit = arcade.check_for_collision_with_list(self.hero, self.doors)
-        if door_hit and self.hero.coins >= 0:
+        if door_hit and self.hero.coins >= 200:
             from particles import spawn_teleport_particles
             self.particles = spawn_teleport_particles(self.hero.center_x, self.hero.center_y, 40)
             for particle in self.particles:
