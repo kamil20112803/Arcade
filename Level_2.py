@@ -28,6 +28,8 @@ class Level2(arcade.View):
         self.spawn_timer = 0
         self.map_width = 0
         self.map_height = 0
+        self.transition_timer = 0
+        self.transition_active = False
 
     def on_show_view(self):
         arcade.set_background_color(arcade.color.BLACK)
@@ -103,9 +105,19 @@ class Level2(arcade.View):
         self.world_camera.position = self.hero.center_x, self.hero.center_y
         door_hit = arcade.check_for_collision_with_list(self.hero, self.doors)
         if door_hit and self.hero.coins >= 400:
-            level3 = Level3()
-            level3.setup(self.hero)
-            self.window.show_view(level3)
+            from particles import spawn_teleport_particles
+            self.particles = spawn_teleport_particles(self.hero.center_x, self.hero.center_y, 40)
+            for particle in self.particles:
+                self.all_sprites.append(particle)
+            self.transition_timer = 0.5
+            self.transition_active = True
+        if self.transition_active:
+            self.transition_timer -= delta_time
+            if self.transition_timer <= 0:
+                self.transition_active = False
+                level3 = Level3()
+                level3.setup(self.hero)
+                self.window.show_view(level3)
 
     def on_key_press(self, key, modifiers):
         self.hero.on_key_press(key, modifiers)
