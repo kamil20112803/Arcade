@@ -6,7 +6,7 @@ class Coin(arcade.Sprite):
         super().__init__(":resources:images/items/coinGold.png", scale=0.5)
         self.center_x = x
         self.center_y = y
-        self.lifetime = 5.0
+        self.lifetime = 10.0
         self.time_alive = 0
 
     def update(self, delta_time):
