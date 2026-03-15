@@ -27,7 +27,6 @@ class Level2(arcade.View):
         self.spawn_timer = 0
         self.map_width = 0
         self.map_height = 0
-        self.required_coins = 200
 
     def on_show_view(self):
         arcade.set_background_color(arcade.color.BLACK)
@@ -82,7 +81,7 @@ class Level2(arcade.View):
         self.physics_engine = arcade.PhysicsEngineSimple(self.hero, self.water)
         self.physics_engine.update()
         self.spawn_timer += delta_time
-        if self.spawn_timer >= 8.0:
+        if self.spawn_timer >= 4.0:
             self.spawn_monster()
             self.spawn_timer = 0
         for monster in self.monsters:
@@ -93,7 +92,7 @@ class Level2(arcade.View):
             monster.try_hit_player(self.hero)
             if self.hero.health <= 0:
                 from gameover import GameOverView
-                self.window.show_view(GameOverView())
+                self.window.show_view(GameOverView(self.hero.coins))
         self.bullets.update()
         self.coins.update(delta_time)
         for coin in self.coins:
@@ -102,9 +101,8 @@ class Level2(arcade.View):
                 coin.remove_from_sprite_lists()
         self.world_camera.position = self.hero.center_x, self.hero.center_y
         door_hit = arcade.check_for_collision_with_list(self.hero, self.doors)
-        if door_hit and self.hero.coins >= self.required_coins:
-            from victory import VictoryView
-            self.window.show_view(VictoryView())
+        if door_hit and self.hero.coins >= 500:
+            pass
 
     def on_key_press(self, key, modifiers):
         self.hero.on_key_press(key, modifiers)
