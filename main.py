@@ -107,7 +107,7 @@ class Level1(arcade.View):
         self.physics_engine = arcade.PhysicsEngineSimple(self.hero, self.walls)
         self.physics_engine.update()
         self.spawn_timer += delta_time
-        if self.spawn_timer >= 10.0:
+        if self.spawn_timer >= 5.0:
             self.spawn_monster()
             self.spawn_timer = 0
         for monster in self.monsters:
